@@ -1,11 +1,29 @@
 const express = require ("express");
-const app = express();
 const multer  = require('multer');
 const fs = require("fs");
 const path = require("path");
-const upload = multer({ dest: "public" });
+const upload = multer({ dest: 'public/uploads/' });
+const app = express();
 
-app.use(express.static("public"));
+app.use(express.json());
+
+app.use((_req, _res, next) => {
+  console.log("Request received.");
+  next();
+});
+
+app.use(express.static("public/uploads"));
+
+app.post('/upload', upload.single('image'),  (req, res) => {
+    console.log(req.file);
+    fs.renameSync(req.file.path, path.join(req.file.destination, req.file.originalname));
+    res.send("ok");
+});
+
+
+app.get("/", (_req, res) => {
+    res.send("Upload");
+});
 
 
 
