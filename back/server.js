@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const upload = multer({ dest: 'public/uploads/' });
 const app = express();
+const user = [];
 
 app.use(express.json());
 
@@ -18,6 +19,7 @@ app.post('/upload', upload.single('image'),  (req, res) => {
     console.log(req.file);
     fs.renameSync(req.file.path, path.join(req.file.destination, req.file.originalname));
     res.send("ok");
+    res.json(user);
 });
 
 
